@@ -86,8 +86,7 @@ class EmployeeController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'role' => 'required|string|in:manager,developer,design,scrum master',
-                'id' => 'required|exists:employees,id'
+                'role' => 'required|string|in:manager,developer,designer,scrum master'
             ]);
 
             if ($validator->fails()) {
@@ -95,7 +94,6 @@ class EmployeeController extends Controller
             }
 
             $employee = Employee::findOrFail($id);
-
             $employee->update(['role' => $request->input('role')]);
 
             return API_Response(200, true, ['message' => 'Role assigned successfully']);
@@ -104,7 +102,6 @@ class EmployeeController extends Controller
             return API_Response(500, false, ['message' => 'Error assigning role to employee', 'error' => $errorBag]);
         }
     }
-
 
     public function search_employees(Request $request)
     {
@@ -141,6 +138,29 @@ class EmployeeController extends Controller
         } catch (\Exception $e) {
             $errorBag = ['message' => $e->getMessage()];
             return API_Response(500, false, ['message' => 'Error searching for employees', 'error' => $errorBag]);
+        }
+    }
+
+
+    public function updateStatus(Request $request, $id)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'status' => 'required|string|in:employed,fired',
+            ]);
+
+            if ($validator->fails()) {
+                return API_Response(400, false, ['message' => 'Validation failed', 'errors' => $validator->errors()]);
+            }
+
+            $employee = Employee::findOrFail($id);
+
+            $employee->update(['status' => $request->input('status')]);
+
+            return API_Response(200, true, ['message' => 'Status updated successfully']);
+        } catch (\Exception $e) {
+            $errorBag = ['message' => $e->getMessage()];
+            return API_Response(500, false, ['message' => 'Error updating status of employee', 'error' => $errorBag]);
         }
     }
 }

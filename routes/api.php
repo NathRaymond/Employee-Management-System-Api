@@ -26,6 +26,7 @@ Route::post('/update-employees/{id}', [EmployeeController::class, 'update_employ
 Route::delete('/delete-employees/{id}', [EmployeeController::class, 'delete_employees']);
 Route::post('/assign-employees/{id}/role', [EmployeeController::class, 'assignRole']);
 Route::get('/search-employees', [EmployeeController::class, 'search_employees']);
+Route::post('/employees/{id}/status', [EmployeeController::class, 'updateStatus']);
 
 
 //Admin Dashboard 
