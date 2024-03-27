@@ -86,7 +86,8 @@ class EmployeeController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'role' => 'required|string|in:manager,developer,design,scrum master'
+                'role' => 'required|string|in:manager,developer,design,scrum master',
+                'id' => 'required|exists:employees,id'
             ]);
 
             if ($validator->fails()) {
@@ -94,6 +95,7 @@ class EmployeeController extends Controller
             }
 
             $employee = Employee::findOrFail($id);
+
             $employee->update(['role' => $request->input('role')]);
 
             return API_Response(200, true, ['message' => 'Role assigned successfully']);
@@ -102,6 +104,7 @@ class EmployeeController extends Controller
             return API_Response(500, false, ['message' => 'Error assigning role to employee', 'error' => $errorBag]);
         }
     }
+
 
     public function search_employees(Request $request)
     {

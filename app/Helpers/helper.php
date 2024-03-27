@@ -431,6 +431,18 @@ if (!function_exists('update_object')) {
 }
 
 
+// function API_Response($statusCode, $response = false, $errorBag = false)
+// {
+//     $status = ($statusCode == 200) ? "success" : (($statusCode == 500) ?  "error" : ($statusCode == 404 ? "warning" : ($statusCode == 100 ? "info" : "unknown")));
+//     $responseAPI = [
+//         "status" => $status,
+//         "statusCode" => $statusCode,
+//     ];
+//     if ($errorBag) $responseAPI["errors"] = $errorBag;
+//     if ($response) $responseAPI["responseBody"] = $response;
+//     return $responseAPI;
+// }
+
 function API_Response($statusCode, $response = false, $errorBag = false)
 {
     $status = ($statusCode == 200) ? "success" : (($statusCode == 500) ?  "error" : ($statusCode == 404 ? "warning" : ($statusCode == 100 ? "info" : "unknown")));
@@ -438,8 +450,19 @@ function API_Response($statusCode, $response = false, $errorBag = false)
         "status" => $status,
         "statusCode" => $statusCode,
     ];
-    if ($errorBag) $responseAPI["errors"] = $errorBag;
-    if ($response) $responseAPI["responseBody"] = $response;
+    
+    if ($errorBag) {
+        if ($status === "error") {
+            $responseAPI["errors"] = $errorBag;
+        } else {
+            $responseAPI["data"] = $errorBag;
+        }
+    }
+    
+    if ($response) {
+        $responseAPI["responseBody"] = $response;
+    }
+    
     return $responseAPI;
 }
 
